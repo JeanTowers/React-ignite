@@ -8,12 +8,13 @@ import styles from './Post.module.css';
 
 
 export function Post({author, publishedAt, content}){
-    const [comments, setComents] = useState([
-        1,
-        2,
+    const [comments, setComments] = useState([
+        'Post muito bacana!',
     
     ])
     
+    const [newCommentText, setNewCommentText] = useState('')
+
     const publishedDateFormated = format(publishedAt,"d 'de' LLLL 'às' HH:mm'h'",{
         locale: ptBR,
         
@@ -27,7 +28,12 @@ export function Post({author, publishedAt, content}){
     function handleCreateNewComment() {
        event.preventDefault()
 
-       setComents([...comments, comments.length + 1])
+       setComments([...comments, newCommentText])
+       setNewCommentText('');
+    }
+
+    function handleCreateNewChange() {
+        setNewCommentText(event.target.value);
     }
 
     return (
@@ -58,15 +64,18 @@ export function Post({author, publishedAt, content}){
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
                 <textarea 
-                   placeholder='Deixe um comentário' 
+                    name='comment'
+                    placeholder='Deixe um comentário' 
+                    value={newCommentText}
+                    onChange={handleCreateNewChange}
                 />
                 <footer>
                     <button type="submit">Publicar</button>
                 </footer>
             </form>
             <div className={styles.commentList}>
-                {comments.map(comments => {
-                    return <Comment />
+                {comments.map(comment => {
+                    return <Comment content={comment}/>
                 })}
             </div>
         </article>
